@@ -85,14 +85,17 @@ export default function Home() {
         <h1>Welcome to My Website</h1>
         <p>This is some overlay text</p>
       </div> */}
-      <img
-        src="/images/golden-scissor.png"
-        alt="Scissor"
-        className="scissor "
-        style={{ top: `${scissorPos.y}px`, display: show ? "block" : "none" }}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-      />
+
+      {scissorPos.y !== 0 && (
+        <img
+          src="/images/golden-scissor.png"
+          alt="Scissor"
+          className="scissor "
+          style={{ top: `${scissorPos.y}px`, display: show ? "block" : "none" }}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+        />
+      )}
     </div>
   );
 }
