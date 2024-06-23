@@ -1,95 +1,98 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
+  const [playing, setPlaying] = useState(false);
+  const videoRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [scissorPos, setScissorPos] = useState({ y: 0 });
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    setScissorPos({ y: container.offsetHeight - 90 }); // Initial position at the bottom
+  }, []);
+
+  const handleDragStart = (clientY) => {
+    setIsDragging(true);
+  };
+
+  const handleDragMove = (clientY) => {
+    if (!isDragging) return;
+
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    const middle = containerRect.height / 2;
+    const newY = clientY - containerRect.top;
+
+    if (newY >= 0 && newY <= containerRect.height) {
+      setScissorPos({ y: newY });
+
+      if (newY >= middle - 50 && newY <= middle + 50 && !playing) {
+        videoRef.current.play();
+        setPlaying(true);
+        setShow(false);
+      }
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    handleDragStart(e.clientY);
+  };
+
+  const handleMouseMove = (e) => {
+    handleDragMove(e.clientY);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e) => {
+    handleDragStart(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e) => {
+    handleDragMove(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchmove", handleTouchMove);
+    document.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [isDragging]);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <div className="video-background-animation" ref={containerRef}>
+      <video ref={videoRef} muted>
+        <source src="/videos/welcome-event.webm" type="video/webm" />
+        Your browser does not support the video tag.
+      </video>
+      {/* <div className="content">
+        <h1>Welcome to My Website</h1>
+        <p>This is some overlay text</p>
+      </div> */}
+      <img
+        src="/images/golden-scissor.png"
+        alt="Scissor"
+        className="scissor "
+        style={{ top: `${scissorPos.y}px`, display: show ? "block" : "none" }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      />
+    </div>
   );
 }
