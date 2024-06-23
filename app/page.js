@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [playing, setPlaying] = useState(false);
+  const [isApple, setIsApple] = useState(false);
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -10,9 +11,16 @@ export default function Home() {
   const [show, setShow] = useState(true);
   const [opacity, setOpacity] = useState(1);
 
+  const isiPhone = () => {
+    return /iPhone|iPod/.test(navigator.userAgent);
+  };
+
   useEffect(() => {
     const container = containerRef.current;
     setScissorPos({ y: container.offsetHeight - 90 }); // Initial position at the bottom
+    if (/iPhone|iPod/.test(navigator.userAgent)) {
+      setIsApple(true);
+    }
   }, []);
 
   const handleDragStart = (clientY) => {
@@ -31,9 +39,15 @@ export default function Home() {
       setScissorPos({ y: newY });
 
       if (newY >= middle - 50 && newY <= middle + 50 && !playing) {
-        videoRef.current.play();
-        setPlaying(true);
-        setShow(false);
+        if (videoRef.current) {
+          console.log("log", videoRef.current.play());
+          videoRef.current.play();
+          setPlaying(true);
+          setShow(false);
+          alert("Video is playing");
+        } else {
+          alert("Browser does not support.");
+        }
       }
     }
   };
