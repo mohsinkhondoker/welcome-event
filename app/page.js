@@ -40,13 +40,10 @@ export default function Home() {
 
       if (newY >= middle - 50 && newY <= middle + 50 && !playing) {
         if (videoRef.current) {
-          console.log("log", videoRef.current.play());
           videoRef.current.play();
           setPlaying(true);
           setShow(false);
-          alert("Video is playing");
         } else {
-          alert("Browser does not support.");
         }
       }
     }
