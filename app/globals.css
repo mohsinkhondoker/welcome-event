@@ -4,8 +4,11 @@
   margin: 0;
   padding: 0;
 }
+body {
+  overflow: hidden;
+}
 .video-background-animation {
-  position: absolute;
+  position: fixed;
   height: 100%;
   width: 100%;
   overflow: hidden;

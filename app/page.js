@@ -8,6 +8,7 @@ export default function Home() {
   const [isDragging, setIsDragging] = useState(false);
   const [scissorPos, setScissorPos] = useState({ y: 0 });
   const [show, setShow] = useState(true);
+  const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -81,9 +82,21 @@ export default function Home() {
     };
   }, [isDragging]);
 
+  const handleClick = () => {
+    console.log("clicked");
+    const container = containerRef.current;
+    const middle = container.offsetHeight / 2;
+    setScissorPos({ y: middle });
+    videoRef.current.play();
+    setPlaying(true);
+    setShow(false);
+    setTimeout(() => {
+      setOpacity(0);
+    }, 500);
+  };
   return (
     <div className="video-background-animation" ref={containerRef}>
-      <video ref={videoRef} muted>
+      <video ref={videoRef} muted playsinline>
         <source src="/videos/welcome-event.webm" type="video/webm" />
         Your browser does not support the video tag.
       </video>
@@ -98,8 +111,14 @@ export default function Home() {
           alt="Scissor"
           className="scissor"
           style={{ top: `${scissorPos.y}px`, display: show ? "block" : "none" }}
+          // style={{
+          //   top: `${scissorPos.y}px`,
+          //   transition: "top 0.5s ease",
+          //   opacity: opacity,
+          // }}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
+          // onClick={handleClick}
         />
       )}
     </div>
