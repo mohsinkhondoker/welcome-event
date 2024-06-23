@@ -38,26 +38,32 @@ export default function Home() {
   };
 
   const handleMouseDown = (e) => {
+    e.preventDefault();
     handleDragStart(e.clientY);
   };
 
   const handleMouseMove = (e) => {
+    e.preventDefault();
     handleDragMove(e.clientY);
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
+    e.preventDefault();
     setIsDragging(false);
   };
 
   const handleTouchStart = (e) => {
+    e.preventDefault();
     handleDragStart(e.touches[0].clientY);
   };
 
   const handleTouchMove = (e) => {
+    e.preventDefault();
     handleDragMove(e.touches[0].clientY);
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e) => {
+    e.preventDefault();
     setIsDragging(false);
   };
 
@@ -90,7 +96,7 @@ export default function Home() {
         <img
           src="/images/golden-scissor.png"
           alt="Scissor"
-          className="scissor "
+          className="scissor"
           style={{ top: `${scissorPos.y}px`, display: show ? "block" : "none" }}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
