@@ -108,7 +108,7 @@ export default function Home() {
   return (
     <div className="video-background-animation" ref={containerRef}>
       <video ref={videoRef} muted playsInline>
-        <source src="/videos/welcome-event.webm" type="video/webm" />
+        <source src="/videos/two-welcome-event.webm" type="video/webm" />
         Your browser does not support the video tag.
       </video>
       {/* <div className="content">
