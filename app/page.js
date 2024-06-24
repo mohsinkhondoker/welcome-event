@@ -1,11 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Lottie from "lottie-react";
+import confittie from "../public/animation/confittie.json";
 
 export default function Home() {
   const [playing, setPlaying] = useState(false);
   const [isApple, setIsApple] = useState(false);
   const videoRef = useRef(null);
   const containerRef = useRef(null);
+
   const [isDragging, setIsDragging] = useState(false);
   const [scissorPos, setScissorPos] = useState({ y: 0 });
   const [show, setShow] = useState(true);
@@ -50,32 +53,32 @@ export default function Home() {
   };
 
   const handleMouseDown = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     handleDragStart(e.clientY);
   };
 
   const handleMouseMove = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     handleDragMove(e.clientY);
   };
 
   const handleMouseUp = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setIsDragging(false);
   };
 
   const handleTouchStart = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     handleDragStart(e.touches[0].clientY);
   };
 
   const handleTouchMove = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     handleDragMove(e.touches[0].clientY);
   };
 
   const handleTouchEnd = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setIsDragging(false);
   };
 
@@ -93,28 +96,21 @@ export default function Home() {
     };
   }, [isDragging]);
 
-  const handleClick = () => {
-    console.log("clicked");
-    const container = containerRef.current;
-    const middle = container.offsetHeight / 2;
-    setScissorPos({ y: middle });
-    videoRef.current.play();
-    setPlaying(true);
-    setShow(false);
-    setTimeout(() => {
-      setOpacity(0);
-    }, 500);
-  };
   return (
     <div className="video-background-animation" ref={containerRef}>
       <video ref={videoRef} muted playsInline>
         <source src="/videos/two-welcome-event.webm" type="video/webm" />
         Your browser does not support the video tag.
       </video>
-      {/* <div className="content">
-        <h1>Welcome to My Website</h1>
-        <p>This is some overlay text</p>
-      </div> */}
+      <div className="content">
+        {playing === true && (
+          <Lottie
+            animationData={confittie}
+            loop={false}
+            style={{ width: "500px", margin: "0 auto" }}
+          />
+        )}
+      </div>
 
       {scissorPos.y !== 0 && (
         <img
@@ -122,14 +118,8 @@ export default function Home() {
           alt="Scissor"
           className="scissor"
           style={{ top: `${scissorPos.y}px`, display: show ? "block" : "none" }}
-          // style={{
-          //   top: `${scissorPos.y}px`,
-          //   transition: "top 0.5s ease",
-          //   opacity: opacity,
-          // }}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
-          // onClick={handleClick}
         />
       )}
     </div>
